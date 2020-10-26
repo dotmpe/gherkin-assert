@@ -22,6 +22,19 @@ def aFileContainingLines(context, name):
     open(name).write(context.text)
 
 
+@then( u'file {nq}(?P<fn>.*){nq} should be (?P<l>[0-9]+) line\(s\) long'.format(**sv) )
+def fileShouldBeLinesLong(ctx, fn, l):
+    v = open(fn).read()
+    c = v.count('\n')
+    if v[-1] != '\n':
+        # newline is used as separator, not as line terminator?
+        if int(l) != c-1:
+            raise Exception("Expected %s but got %i lines" % (l, c-1))
+    else: # last line must be empty but we check anyway
+        if int(l) != c:
+            raise Exception("Expected %s but got %i lines" % (l, c))
+
+
 @then( u"file {nq}(?P<filename>.+){nq} lines equal".format(**sv) )
 def fileLinesEqualMultiline(context, filename):
     """

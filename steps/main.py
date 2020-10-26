@@ -131,6 +131,25 @@ def cleanEnv(context, name=None, vars=None):
 def projectTarget(context, target):
     theUserRuns(context, 'build-ifchange {target}'.format(target=target))
 
+
+# Check for or use project build-tools to install prerequisites
+@given( "setup for project tools is done." )
+def givenProjectTools(context):
+    # TODO: may want to use redo alt to make
+    theUserRuns(context, 'test -e "$PWD/Makefile" || { rm Makefile; ln -s /usr/local/share/mkdoc/Mkdoc-full.mk Makefile; }', None)
+
+
+@given( "setup for Python tools is done." )
+def givenPythonSetup(context):
+    givenProjectTools(context)
+# TODO: should want to use scrtab here
+    theUserRuns(context, 'make install-python-script', None)
+# TODO: may also want to check if libs load, ie. PYTHONPATH or other is setup.
+# may want to re-run this for every new environment, but again, only once per
+# instance. Cannot solve this in Gherkin? Redo would be nice. Here too scrtab
+# could step in.
+    #pythonImports(context, "scrow, gate")
+
 @given( "the current (?P<name>.*),?" )
 def theCurrent(ctx, name):
     if ',' in name or ' and ' in name:
