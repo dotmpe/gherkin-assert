@@ -5,12 +5,12 @@ use_step_matcher("re")
 from matches import *
 
 
-@given( u"{nq}(?P<key>.*){nq}[:=]? {nq}?(?P<val>[^ $]*){nq}?".format(**sv) )
+@given( u"{nq}(?P<key>[^ {nq}]+){nq}[:=]? {nq}?(?P<val>[^ $]*){nq}?".format(**sv) )
 def contextStrVar(ctx, key, val):
     setattr(ctx, key, val)
 
 
-@given( u"{nq}(?P<mapping>.+){nq} key {nq}(?P<key>.+){nq} {nq}(?P<val>.*){nq}".format(**sv) )
+@given( u"{nq}(?P<mapping>[^ ]+){nq} key {nq}(?P<key>[^ ]+){nq} {nq}(?P<val>.*){nq}".format(**sv) )
 def contextMapStrVar(ctx, mapping, key, val):
     d = getattr(ctx, mapping, {})
     d[key] = val
