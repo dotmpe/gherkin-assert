@@ -48,7 +48,7 @@ trait ProjectContextTrait {
         $default_env = '. $scriptpath/util.sh ; lib_load';
         $package_env = $default_env .' ; lib_load package && package_lib_set_local .';
 
-        $this->env = $package_env .' && . "$PACKMETA_SH"';
+        $this->env = $package_env .' && . "$PACK_SH"';
     }
 
     /**

@@ -84,21 +84,21 @@ def cleanTempDir(context, path):
 
 def envDefaults(context):
     if 'env' not in getattr(context, 'tpl_vars', {}):
-        contextMapStrVar(context, 'tpl_vars', 'env', '. \$CWD/.env.sh && . \$CWD/.meta/package/main.sh')
-    if 'env_lib_load' not in getattr(context, 'tpl_vars', {}):
-        contextMapStrVar(context, 'tpl_vars', 'env_lib_load', '. \$U_S/tools/sh/init.sh && lib_load')
+        contextMapStrVar(context, 'tpl_vars', 'env', '. \$CWD/.meta/package/main.sh')
+    if 'env_lib_require' not in getattr(context, 'tpl_vars', {}):
+        contextMapStrVar(context, 'tpl_vars', 'env_lib_require', '. \$U_S/tools/sh/init.sh && lib_require')
     if 'env_setup' not in getattr(context, 'tpl_vars', {}):
-        contextMapStrVar(context, 'tpl_vars', 'env_setup', '$(env) && $(env_lib_load) log std setup-sh-tpl')
+        contextMapStrVar(context, 'tpl_vars', 'env_setup', '$(env) && $(env_lib_require) log std date setup-sh-tpl')
 
-@given( "{nq}([^']*){nq} setup from {nq}([^']*){nq}".format(**sv) )
-@when( "{nq}([^']*){nq} is setup from {nq}([^']*){nq}".format(**sv) )
-@given( "{nq}([^']*){nq} setup from {nq}([^']*){nq} with (?P<args>.+)".format(**sv) )
-@when( "{nq}([^']*){nq} is setup from {nq}([^']*){nq} with (?P<args>.+)".format(**sv) )
-def workingDirFromTpl(context, dirname, tplname, args=None):
+@given( "{nq}([^{quotes}]+){nq} setup from {nq}([^{quotes}]+){nq}".format(**sv) )
+@when( "{nq}([^{quotes}]+){nq} is setup from {nq}([^{quotes}]+){nq}".format(**sv) )
+@given( "{nq}([^{quotes}]+){nq} setup from {nq}([^{quotes}]+){nq} with (?P<args>.+)".format(**sv) )
+@when( "{nq}([^{quotes}]+){nq} is setup from {nq}([^{quotes}]+){nq} with (?P<args>.+)".format(**sv) )
+def workingDirFromTpl(context, dirname, tplname, args=''):
     rtplname = os.path.realpath(tplname)
     tempDir(context, dirname)
     envDefaults(context)
-    theUserRuns(context, '$(env_setup) && setup_sh_tpl \"%s\" %s' % (rtplname, args), None)
+    theUserRuns(context, '$(env_setup) && lib_init date && setup_sh_tpl \"%s\" %s' % (rtplname, args), None)
 
 @given( "a clean {nq}(?P<lib>.*){nq} user-lib env".format(**sv) )
 @given( "a clean {nq}(?P<lib>.*){nq} user-lib env with {nq}?(?P<vars>.+){nq}?".format(**sv) )
@@ -114,7 +114,7 @@ def cleanUserLibEnv(context, lib=None, vars=None):
         k, v  = s.split('=')
         d[k] = v
     setattr(context, 'vars', d)
-    theUserRuns(context, '$(env_lib_load) \$lib_utils && lib_init', None)
+    theUserRuns(context, '$(env) && $(env_lib_require) \$lib_utils && lib_init', None)
 
 @given( "a clean {nq}?(?P<name>.*){nq}? env".format(**sv) )
 @given( "a clean {nq}?(?P<name>.*){nq}? env with {nq}?(?P<vars>.+){nq}?".format(**sv) )
