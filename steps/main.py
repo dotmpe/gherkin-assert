@@ -83,7 +83,7 @@ def cleanTempDir(context, path):
 
 def envDefaults(context):
     if 'env' not in getattr(context, 'tpl_vars', {}):
-        contextMapStrVar(context, 'tpl_vars', 'env', '. \$CWD/.env.sh && . \$CWD/.meta/package/main.sh')
+        contextMapStrVar(context, 'tpl_vars', 'env', '. \$CWD/.meta/package/main.sh')
     if 'env_lib_require' not in getattr(context, 'tpl_vars', {}):
         contextMapStrVar(context, 'tpl_vars', 'env_lib_require', '. \$U_S/tools/sh/init.sh && lib_require')
     if 'env_setup' not in getattr(context, 'tpl_vars', {}):
