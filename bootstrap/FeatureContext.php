@@ -118,10 +118,10 @@ class FeatureContext implements SnippetAcceptingContext
         $class = str_replace('.', '', $class);
         switch ($class) {
             case "std":
-                throw new PendingException("Todo run CLI outline ... $cmd $class");
+                throw new PendingException("TODO: run CLI outline ... $cmd $class");
                 break;
             default:
-                throw new PendingException("Foo $cmd $class");
+                throw new PendingException("TODO: Foo $cmd $class");
         }
     }
 

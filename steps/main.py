@@ -46,6 +46,7 @@ def bashCommand(ctx, cmd, err=None, tplshell='/bin/sh'):
         raise Exception("User run returned %i" % p.returncode)
 
 @when( 'the user runs {nq}(?P<sh>.*){nq}{cl}'.format(**sv) )
+@when( 'the user executes {nq}(?P<sh>.*){nq}{cl}'.format(**sv) )
 def theUserRuns(ctx, sh, err):
     """
     Given shell command `sh`. Use '...' or '?' to allow non-zero exit.

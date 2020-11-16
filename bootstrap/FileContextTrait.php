@@ -3,10 +3,13 @@
 use Behat\Gherkin\Node\PyStringNode;
 
 
+/**
+ * Simple operations and tests on files, including content comparisons.
+ */
 trait FileContextTrait {
 
     /**
-     * Store line into file.
+     * Store one line into file.
      *
      * @Given a file ":name" containing ":contents"/
      */
@@ -16,9 +19,9 @@ trait FileContextTrait {
     }
 
     /**
-     * Store multiline into file.
+     * Store multiline part into file.
      *
-     * @Given /^a file "([^"]*)" containing:$/
+     * @Given /^a file "([^"]+)" containing:$/
      */
     public function aFileContainingLines($fileName, PyStringNode $contents)
     {

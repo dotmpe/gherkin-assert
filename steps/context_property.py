@@ -72,12 +72,14 @@ def contextStringAttrShouldBeLength(ctx, attr, l):
         raise Exception("Expected %s but got %i lines" % (l, c))
 
 @then( u'{nq}(?P<attr>.+){nq} should be empty'.format(**sv) )
+@then( u'{nq}(?P<attr>.+){nq} is empty'.format(**sv) )
 def contextStringAttrShouldBeEmpty(ctx, attr):
     v = str(getattr( ctx, attr ))
     if v:
         raise Exception("Expected none at %s but got %i chars" % (attr, len(c)))
 
 @then( u'{nq}(?P<attr>.+){nq} should not be empty'.format(**sv) )
+@then( u'{nq}(?P<attr>.+){nq} is not empty'.format(**sv) )
 def contextStringAttrShouldNotBeEmpty(ctx, attr):
     v = str(getattr( ctx, attr ))
     if not v:

@@ -8,14 +8,19 @@ use Behat\Behat\Tester\Exception\PendingException,
 trait ContextPropertyTrait {
 
     /**
+     * Store value at property on context.
+     *
+     * @Given /^property "([^"]*)" with value \'([^\']*)\'$/
      * @Given `:ctx` :arg1
      */
-    public function contextProp($ctx, $arg1)
+    public function contextPropertySet($propertyName, $value)
     {
-        $this->$ctx = $arg1;
+        $this->{$propertyName} = $value;
     }
 
     /**
+     * Store value in map on context.
+     *
      * @Given `:ctx` key `:key` :value
      */
     public function contextArrPropSet($ctx, $key, $value)
@@ -27,6 +32,8 @@ trait ContextPropertyTrait {
     }
 
     /**
+     * Test value for map on context.
+     *
      * @Then `:ctx` key `:key` equals :value
      */
     public function contextArrPropEq($ctx, $key, $value)
@@ -46,18 +53,8 @@ trait ContextPropertyTrait {
         $this->contextArrPropEq($ctx, $key, $value);
     }
 
-
-    /**
-     * Store value on context for later use by name reference.
-     *
-     * @Given /^property "([^"]*)" with value \'([^\']*)\'$/
-     */
-    public function contextPropertySetting($propertyName, $value)
-    {
-        $this->$propertyName = $value;
-    }
-
-//  All these should be superseded by contextPropertyCmd
+//  XXX: All these should be superseded by contextPropertyCmd
+//
 //    /**
 //     * Literal string comparison, no expansion whatsoever.
 //     * To negate @see contextPropertyShouldNotEqual.
@@ -83,15 +80,27 @@ trait ContextPropertyTrait {
 //            throw new Exception(" $propertyName is '{$this->$propertyName}' and matches '$string'");
 //        }
 //    }
-//
-//    /**
-//     * @Then /^`([^`]+)` should be empty.?$/
-//     */
-//    public function contextPropertyShouldBeEmpty($propertyName) {
-//        if (!empty($this->$propertyName)) {
-//            throw new Exception("Not empty (but '{$this->$propertyName}')");
-//        }
-//    }
+
+    /**
+     * @Then /^`([^`]+)` is empty.?$/
+     * @Then /^`([^`]+)` should be empty.?$/
+     */
+    public function contextPropertyShouldBeEmpty($propertyName) {
+        if (!empty($this->$propertyName)) {
+            throw new Exception("Not empty (but '{$this->$propertyName}')");
+        }
+    }
+
+    /**
+     * @Then /^`([^`]+)` is not empty.?$/
+     * @Then /^`([^`]+)` should not be empty.?$/
+     */
+    public function contextPropertyShouldNotBeEmpty($propertyName)
+    {
+        if (empty($this->$propertyName)) {
+            throw new Exception("Expected non-empty '$propertyName'");
+        }
+    }
 
     /**
      * Test an attribute of the context, compare modes are:

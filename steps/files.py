@@ -1,4 +1,4 @@
-import os
+import os, glob
 
 from behave import given, then
 from behave import use_step_matcher
@@ -12,14 +12,15 @@ def aFileContaining(context, name, contents):
     """
     Store line into file.
     """
-    open(name).write(contents)
+    open(name, 'w+').write(contents)
 
-@given( u"a file {nq}(?P<name>.+){nq} containing:".format(**sv) )
+@given( u"file {nq}(?P<name>.+){nq} contains".format(**sv) )
+@given( u"a file {nq}(?P<name>.+){nq} containing".format(**sv) )
 def aFileContainingLines(context, name):
     """
     Store multiline into file.
     """
-    open(name).write(context.text)
+    open(name, 'w+').write(context.text)
 
 
 @then( u'file {nq}(?P<fn>.*){nq} should be (?P<l>[0-9]+) line\(s\) long'.format(**sv) )
@@ -82,6 +83,47 @@ def fileShouldHaveMultiline(ctx, fn):
 @then( "`([^`]+)` has( not)? (exactly|more|less)(?: than)?( or equal to)? ([0-9]+) lines" )
 def countFilelines(context, attr, invert, mode, or_equal, linecount):
     pass
+
+
+@given( 'a (\w*) {nq}(.+){nq} exists\.?'.format(**sv) )
+@given( '(\w*) {nq}(.+){nq} exists\.?'.format(**sv) )
+@given( '(\w*) path {nq}(.+){nq} exists\.?'.format(**sv) )
+@given( 'that (\w*) paths {nq}(.+){nq} exists\(.?\)'.format(**sv) )
+def pathExists(context, spec, type='file', trail=None):
+   """
+   Fail if path does not exists, or on failing match in glob spec.
+   """
+   globals()['pathname_type_' + type](spec, True)
+
+@given( 'no (\w*) {nq}(.+){nq} exists\.?'.format(**sv) )
+@given( '(\w*) {nq}(.+){nq} doesn\'t exist\.?'.format(**sv) )
+@given( '(\w*) path {nq}(.+){nq} doesn\'t exist\.?'.format(**sv) )
+@given( 'that (\w*) paths {nq}(.+){nq} doesn\'t exist\(.?\)'.format(**sv) )
+def noPathExists(context, type='file', spec=None, trail=None):
+   """
+   Fail if path exists, or on existing match in glob spec.
+   """
+   globals()['pathname_type_' + type](spec, False)
+
+
+def pathname_type_directory(spec, exists=True):
+    for match in glob.glob(spec):
+        if exists:
+            if not os.path.isdir(match):
+                raise Exception("Directory '%s' does not exist, it should" %
+                        match)
+        else:
+            if os.path.isdir(match):
+                raise Exception("Directory '%s' exists, it shouldn't" % match)
+
+def pathname_type_file(spec, exists=True):
+    for match in glob.glob(spec):
+        if exists:
+            if not os.path.isfile(match):
+                raise Exception("File '%s' does not exist, it should" % match)
+        else:
+            if os.path.isfile(match):
+                raise Exception("File '%s' exists, it shouldn't" % match)
 
 
 #
