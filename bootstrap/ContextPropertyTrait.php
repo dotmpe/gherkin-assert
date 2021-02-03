@@ -53,8 +53,8 @@ trait ContextPropertyTrait {
         $this->contextArrPropEq($ctx, $key, $value);
     }
 
-//  XXX: All these should be superseded by contextPropertyCmd
-//
+//  XXX: These two should be superseded by contextPropertyCmd
+
 //    /**
 //     * Literal string comparison, no expansion whatsoever.
 //     * To negate @see contextPropertyShouldNotEqual.
